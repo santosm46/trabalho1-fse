@@ -1,6 +1,8 @@
 #include "pid.h"
 #include <stdio.h>
 
+#define MIN_VENTOINHA -40.0
+
 double saida_medida, sinal_de_controle;
 double referencia = 0.0;
 double Kp = 0.0;  // Ganho Proporcional
@@ -12,10 +14,24 @@ double erro_total, erro_anterior = 0.0;
 int sinal_de_controle_MAX = 100.0;
 int sinal_de_controle_MIN = -100.0;
 
+
+
 void pid_configura_constantes(double Kp_, double Ki_, double Kd_){
     Kp = Kp_;
     Ki = Ki_;
     Kd = Kd_;
+}
+
+int pid_configura_default(int rasp){
+    if(rasp == 42) {
+        pid_configura_constantes(30.0, 0.2, 400.0);
+    } else if(rasp == 43) {
+        pid_configura_constantes(20.0, 0.1, 100.0);
+    } else {
+        printf("valor da rasp invalido\n");
+        return -1;
+    }
+    return 0;
 }
 
 void pid_atualiza_referencia(float referencia_){
@@ -52,5 +68,8 @@ double pid_controle(double saida_medida){
 
     erro_anterior = erro;
 
+    if(sinal_de_controle < 0.0 && sinal_de_controle > MIN_VENTOINHA){
+        return MIN_VENTOINHA;
+    }
     return sinal_de_controle;
 }

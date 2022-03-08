@@ -1,7 +1,10 @@
 #include <stdio.h>
+// #include "../PID/pid.h"
+#include "testePID.h"
 
 int main(int argc, char const *argv[]) {
-    printf("ola mundo\n");
+    
+    testePID();
 
     return 0;
 }
